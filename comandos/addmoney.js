@@ -1,8 +1,10 @@
 const Discord = require('discord.js')
-
+const db = require('megadb');
 module.exports = async (bot, message, args) => {
 
  let emoji = "<:MonedaOmega:749813116514074624>"
+let economia = new db.crearDB(`${message.guild.id}`, 'economia_db');
+  
 
 
     if (!message.member.hasPermission('ADMINISTRATOR')) {
@@ -14,10 +16,9 @@ module.exports = async (bot, message, args) => {
 
     let user = message.mentions.users.first() || message.author
 
-    db.add(`money_${message.guild.id}_${user.id}`, args[0])
+    economia.sumar(`money_${message.guild.id}_${user.id}`, args[0])
 
-
-     let bal = await db.get(`money_${message.guild.id}_${user.id}`)
+     let bal = await economia.obtener(`money_${message.guild.id}_${user.id}`)
 
     let embed = new Discord.MessageEmbed()
     .setAuthor(`Added Tabs!`, message.author.displayAvatarURL)
@@ -27,5 +28,6 @@ module.exports = async (bot, message, args) => {
     .setTimestamp()
 
     message.channel.send(embed)
+
 
 }
